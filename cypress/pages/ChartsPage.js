@@ -12,12 +12,12 @@ class ChartsPage {
         titleTag: 'h6',
         subtitle: 'Análise de dados',
         title: {
-
             temperature: 'Temperatura',
             velocity: 'Velocidade RMS',
             acceleration: 'Aceleração RMS'
         },
-        chartGroup: '.highcharts-series-group'
+        chartGroup: '.highcharts-series-group',
+        tooltip: '.highcharts-tooltip'
     }
 
     firstMock = {
@@ -116,16 +116,13 @@ class ChartsPage {
                 const series = second.data
                 expect(series.length).to.eq(3)
 
-                // valida estrutura da série
                 expect(series[0].data.length).to.eq(2)
                 expect(series[0].name).to.eq('accelerationRms/x')
                 expect(series[1].name).to.eq('accelerationRms/y')
                 expect(series[2].name).to.eq('accelerationRms/z')
 
-                // valida que os dados foram atualizados (valores diferentes entre first e second)
                 expect(second.data[0].data[0].max).not.to.eq(first.data[0].data[0].max)
 
-                // valida conteúdo esperado do segundo mock
                 expect(second.data[0].data[0]).to.deep.equal({
                     datetime: '2024-01-01T00:00:00Z',
                     max: 111
@@ -141,6 +138,20 @@ class ChartsPage {
             cy.contains(`${metadata.rpm}`).should('be.visible')
             cy.contains(`${metadata.dynamicRange}`).should('be.visible')
         })
+    }
+
+    hoverOverChart() {
+        cy.get(this.elements.chartGroup)
+            .first().find('.highcharts-series-0')
+            .first()
+            .click()
+            .realHover();
+    }
+
+    validateTooltipContent(content) {
+        cy.get(this.elements.tooltip)
+            .should('be.visible')
+            .should('contain.text', content)
     }
 }
 

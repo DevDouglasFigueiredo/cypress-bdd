@@ -1,8 +1,17 @@
 import { Given, When, Then } from '@badeball/cypress-cucumber-preprocessor'
 import ChartsPage from '../../pages/ChartsPage'
+import "cypress-real-events";
 
 When('I refresh the page', () => {
    ChartsPage.refreshPage();
+})
+
+When('I hover over the time series charts', () => {
+   ChartsPage.hoverOverChart();
+})
+
+Then('I should see a tooltip displaying the data values', () => {
+    ChartsPage.validateTooltipContent('Monday, Jan 1, 01:00 AM​● Axial: 20 g​');
 })
 
 Then('I should see a header with machine information', () => {
@@ -51,4 +60,7 @@ Then('I should see a chart for Velocidade RMS', () => {
 Then('I should see updated data of charts', () => {
     ChartsPage.validadeUpdateChartData();
     ChartsPage.validateMetadata();
+
+    ChartsPage.hoverOverChart();
+    ChartsPage.validateTooltipContent('Monday, Jan 1, 12:00 AM​● Axial: 111 g​');
 })

@@ -5,6 +5,8 @@ Feature: Charts
     2. As a user, I want to view 3 time series charts for RMS Acceleration, RMS Velocity, and
     Temperature.
     3. As a user, I want the data to be refreshed every time I access the page.
+    4. As a user, when hovering over the time series, I want to see a tooltip displaying the
+    data values.
 
     Background:
         Given I am on the charts page
@@ -26,3 +28,7 @@ Feature: Charts
     Scenario: Data is refreshed when accessing the page
         When I refresh the page
         Then I should see updated data of charts
+
+    Scenario: Tooltip displays correct data values when hovering over the time series
+        When I hover over the time series charts
+        Then I should see a tooltip displaying the data values
