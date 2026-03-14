@@ -1,9 +1,14 @@
 import { Given, When, Then } from '@badeball/cypress-cucumber-preprocessor'
 
 When('I refresh the page', () => {
-    cy.wait('@getData')
-    cy.wait('@getMetadata')
+    // reload first, then wait the requests triggered by the reload and save their responses
     cy.reload();
+    cy.wait('@getData').then((interception) => {
+        cy.wrap(interception.response.body).as('secondData')
+    })
+    cy.wait('@getMetadata').then((interception) => {
+        cy.wrap(interception.response.body).as('secondMetadata')
+    })
 })
 
 Then('I should see a header with machine information', () => {
@@ -49,28 +54,30 @@ Then('I should see a chart for Velocidade RMS', () => {
 })
 
 Then('I should see updated data of charts', () => {
+    // compara a primeira carga (alias criada no Given) com a segunda (alias criada no When)
+    cy.get('@firstData').then((first) => {
+        cy.get('@secondData').then((second) => {
+            const series = second.data
+            expect(series.length).to.eq(3)
 
-    cy.wait('@getData').then((interception) => {
-        expect(interception.response.statusCode).to.eq(200)
-        const series = interception.response.body.data
-        expect(series.length).to.eq(3)
+            // valida estrutura da série
+            expect(series[0].data.length).to.eq(2)
+            expect(series[0].name).to.eq('accelerationRms/x')
+            expect(series[1].name).to.eq('accelerationRms/y')
+            expect(series[2].name).to.eq('accelerationRms/z')
 
-        // valida estrutura da série
-        expect(series[0].data.length).to.eq(2)
-        expect(series[0].name).to.eq('accelerationRms/x')
-        expect(series[1].name).to.eq('accelerationRms/y')
-        expect(series[2].name).to.eq('accelerationRms/z')
+            // valida que os dados foram atualizados (valores diferentes entre first e second)
+            expect(second.data[0].data[0].max).not.to.eq(first.data[0].data[0].max)
 
-        // valida conteúdo do mock
-        expect(series[0].data[0]).to.deep.equal({
-            datetime: '2024-01-01T00:00:00Z',
-            max: 10
+            // valida conteúdo esperado do segundo mock
+            expect(second.data[0].data[0]).to.deep.equal({
+                datetime: '2024-01-01T00:00:00Z',
+                max: 111
+            })
         })
     })
 
-    cy.wait('@getMetadata').then((interception) => {
-        expect(interception.response.statusCode).to.eq(200)
-        const metadata = interception.response.body
+    cy.get('@secondMetadata').then((metadata) => {
         cy.contains(`${metadata.machine}`).should('be.visible')
         cy.contains(`${metadata.spot}`).should('be.visible')
         cy.contains(`${metadata.rpm}`).should('be.visible')
