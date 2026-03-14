@@ -73,15 +73,8 @@ class ChartsPage {
     }
 
     mockDataRequests() {
-        let call = 0
-
-        cy.intercept('GET', '**/data.json', (req) => {
-            call++
-            if (call === 1) req.reply(this.firstMock)
-            else req.reply(this.secondMock)
-        }).as('getData')
-
-        cy.intercept('GET', '**/metadata.json').as('getMetadata')
+        cy.intercept('GET', '**/data.json', this.firstMock).as('getData');
+        cy.intercept('GET', '**/metadata.json').as('getMetadata');
     }
 
     visit() {
@@ -89,15 +82,17 @@ class ChartsPage {
     }
 
     refreshPage() {
-        cy.reload()
+        cy.intercept('GET', '**/data.json', this.secondMock).as('getData');
+
+        cy.reload();
 
         cy.wait('@getData').then((interception) => {
-            cy.wrap(interception.response.body).as('secondData')
-        })
+            cy.wrap(interception.response.body).as('secondData');
+        });
 
         cy.wait('@getMetadata').then((interception) => {
-            cy.wrap(interception.response.body).as('secondMetadata')
-        })
+            cy.wrap(interception.response.body).as('secondMetadata');
+        });
     }
 
     waitInitialLoad() {
