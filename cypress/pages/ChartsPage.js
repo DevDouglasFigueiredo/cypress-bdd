@@ -78,7 +78,7 @@ class ChartsPage {
     }
 
     visit() {
-        cy.visit('https://frontend-test-for-qa.vercel.app/')
+        cy.visit('/')
     }
 
     refreshPage() {

@@ -5,6 +5,7 @@ import createEsbuildPlugin from '@badeball/cypress-cucumber-preprocessor/esbuild
 
 export default defineConfig({
   e2e: {
+    baseUrl: 'https://frontend-test-for-qa.vercel.app', 
     fixturesFolder: false,
     specPattern: 'cypress/e2e/**/*.feature',
     async setupNodeEvents(on, config) {
