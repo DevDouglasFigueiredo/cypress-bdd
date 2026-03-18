@@ -5,4 +5,5 @@ Given('I am on the charts page', () => {
   ChartsPage.mockDataRequests()
   ChartsPage.visit()
   ChartsPage.waitInitialLoad()
+
 })

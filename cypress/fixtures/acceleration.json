@@ -1,0 +1,88 @@
+{
+  "firstMock": {
+    "data": [
+      {
+        "name": "accelerationRms/x",
+        "data": [
+          {
+            "datetime": "2024-01-01T00:00:00Z",
+            "max": 10
+          },
+          {
+            "datetime": "2024-01-01T01:00:00Z",
+            "max": 20
+          }
+        ]
+      },
+      {
+        "name": "accelerationRms/y",
+        "data": [
+          {
+            "datetime": "2024-01-01T00:00:00Z",
+            "max": 30
+          },
+          {
+            "datetime": "2024-01-01T01:00:00Z",
+            "max": 40
+          }
+        ]
+      },
+      {
+        "name": "accelerationRms/z",
+        "data": [
+          {
+            "datetime": "2024-01-01T00:00:00Z",
+            "max": 50
+          },
+          {
+            "datetime": "2024-01-01T01:00:00Z",
+            "max": 60
+          }
+        ]
+      }
+    ]
+  },
+  "secondMock": {
+    "data": [
+      {
+        "name": "accelerationRms/x",
+        "data": [
+          {
+            "datetime": "2024-01-01T00:00:00Z",
+            "max": 111
+          },
+          {
+            "datetime": "2024-01-01T01:00:00Z",
+            "max": 222
+          }
+        ]
+      },
+      {
+        "name": "accelerationRms/y",
+        "data": [
+          {
+            "datetime": "2024-01-01T00:00:00Z",
+            "max": 333
+          },
+          {
+            "datetime": "2024-01-01T01:00:00Z",
+            "max": 444
+          }
+        ]
+      },
+      {
+        "name": "accelerationRms/z",
+        "data": [
+          {
+            "datetime": "2024-01-01T00:00:00Z",
+            "max": 555
+          },
+          {
+            "datetime": "2024-01-01T01:00:00Z",
+            "max": 666
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,79 +1,12 @@
+import { elements } from '../fixtures/elements'
+
 class ChartsPage {
 
-    elements = {
-        span: {
-            dataMachine: 'span.MuiTypography-caption',
-            regexMachine: /^Máquina\s+\d+$/,
-            regexSpot: /^Ponto\s+\d+$/,
-            regexRpm: /^\d+$/,
-            regexDynamicRange: /^\d+g$/,
-            regexInterval: /^(\d+)\s*min$/i
-        },
-        titleTag: 'h6',
-        subtitle: 'Análise de dados',
-        title: {
-            temperature: 'Temperatura',
-            velocity: 'Velocidade RMS',
-            acceleration: 'Aceleração RMS'
-        },
-        chartGroup: '.highcharts-series-group',
-        tooltip: '.highcharts-tooltip'
-    }
-
-    firstMock = {
-        data: [
-            {
-                name: "accelerationRms/x",
-                data: [
-                    { datetime: "2024-01-01T00:00:00Z", max: 10 },
-                    { datetime: "2024-01-01T01:00:00Z", max: 20 },
-                ]
-            },
-            {
-                name: "accelerationRms/y",
-                data: [
-                    { datetime: "2024-01-01T00:00:00Z", max: 30 },
-                    { datetime: "2024-01-01T01:00:00Z", max: 40 },
-                ]
-            },
-            {
-                name: "accelerationRms/z",
-                data: [
-                    { datetime: "2024-01-01T00:00:00Z", max: 50 },
-                    { datetime: "2024-01-01T01:00:00Z", max: 60 },
-                ]
-            }
-        ]
-    }
-
-    secondMock = {
-        data: [
-            {
-                name: "accelerationRms/x",
-                data: [
-                    { datetime: "2024-01-01T00:00:00Z", max: 111 },
-                    { datetime: "2024-01-01T01:00:00Z", max: 222 },
-                ]
-            },
-            {
-                name: "accelerationRms/y",
-                data: [
-                    { datetime: "2024-01-01T00:00:00Z", max: 333 },
-                    { datetime: "2024-01-01T01:00:00Z", max: 444 },
-                ]
-            },
-            {
-                name: "accelerationRms/z",
-                data: [
-                    { datetime: "2024-01-01T00:00:00Z", max: 555 },
-                    { datetime: "2024-01-01T01:00:00Z", max: 666 },
-                ]
-            }
-        ]
-    }
-
     mockDataRequests() {
-        cy.intercept('GET', '**/data.json', this.firstMock).as('getData');
+        cy.fixture('acceleration').then((mock) => {
+            cy.intercept('GET', '**/data.json', mock.firstmock).as('getData');
+        });
+
         cy.intercept('GET', '**/metadata.json').as('getMetadata');
     }
 
@@ -82,8 +15,9 @@ class ChartsPage {
     }
 
     refreshPage() {
-        cy.intercept('GET', '**/data.json', this.secondMock).as('getData');
-
+        cy.fixture('acceleration').then((mock) => {
+            cy.intercept('GET', '**/data.json', mock.secondMock).as('getData');
+        });
         cy.reload();
 
         cy.wait('@getData').then((interception) => {
@@ -136,15 +70,15 @@ class ChartsPage {
     }
 
     hoverOverChart() {
-        cy.get(this.elements.chartGroup)
+        cy.get(elements.chartGroup)
             .first().find('.highcharts-series-0')
             .first()
-            .click()
+            .click({force: true})
             .realHover();
     }
 
     validateTooltipContent(content) {
-        cy.get(this.elements.tooltip)
+        cy.get(elements.tooltip)
             .should('be.visible')
             .should('contain.text', content)
     }
