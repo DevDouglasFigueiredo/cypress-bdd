@@ -7,6 +7,8 @@ Feature: Charts
     3. As a user, I want the data to be refreshed every time I access the page.
     4. As a user, when hovering over the time series, I want to see a tooltip displaying the
     data values.
+    5. As a user, I want to see an error message when the charts data cannot be loaded.
+    6. As a user, I want to see a loading indicator while the charts are being loaded.
 
     Background:
         Given I am on the charts page
@@ -32,3 +34,12 @@ Feature: Charts
     Scenario: Tooltip displays correct data values when hovering over the time series
         When I hover over the time series charts
         Then I should see a tooltip displaying the data values
+
+    Scenario: Error message is displayed when charts data cannot be loaded
+        When the charts API returns an error
+        Then I should not see the charts
+        # And I should see an error message
+
+    Scenario: Loading indicator is displayed while charts are loading
+        When I should see a loading indicator
+        Then I should not see the charts

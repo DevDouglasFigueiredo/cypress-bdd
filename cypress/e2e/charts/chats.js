@@ -4,11 +4,42 @@ import { elements } from '../../fixtures/elements';
 import "cypress-real-events";
 
 When('I refresh the page', () => {
+   ChartsPage.mockDataRequests()
+   ChartsPage.waitInitialLoad()
    ChartsPage.refreshPage();
 })
 
 When('I hover over the time series charts', () => {
    ChartsPage.hoverOverChart();
+})
+
+When('I should see a loading indicator', () => {
+    ChartsPage.mockDelay() 
+    cy.get('p').should('have.text', 'Loading...')
+})
+
+When('the charts API returns an error', () => {
+    ChartsPage.mockError()
+})
+
+Then('I should not see the charts', () => {
+    cy.get(elements.chartGroup)
+      .should('not.exist')
+    cy.get('main .MuiBox-root')
+      .first()
+      .should('not.contain', elements.span.regexMachine)
+    cy.get('main .MuiBox-root')
+      .first()
+      .should('not.contain', elements.span.regexDynamicRange)
+    cy.get('main .MuiBox-root')
+      .first()
+      .should('not.contain', elements.span.regexInterval)
+    cy.get('main .MuiBox-root')
+      .first()
+      .should('not.contain', elements.span.regexMachine)
+    cy.get('main .MuiBox-root')
+      .first()
+      .should('not.contain', elements.span.regexSpot)
 })
 
 Then('I should see a tooltip displaying the data values', () => {

@@ -10,6 +10,24 @@ class ChartsPage {
         cy.intercept('GET', '**/metadata.json').as('getMetadata');
     }
 
+    mockError (){
+        cy.intercept('GET', '**/data.json',{
+            statusCode: 500,
+        }).as('getDataError')
+        cy.intercept('GET', '**/metadata.json',{
+            statusCode: 500,
+        }).as('getMetadataError')
+    }
+
+    mockDelay (){
+         cy.intercept('GET', '**/data.json',{
+            delay:2000,
+        }).as('getDataError')
+         cy.intercept('GET', '**/metadata.json',{
+            statusCode: 500,
+        }).as('getMetadataError')
+    }
+
     visit() {
         cy.visit('/')
     }
